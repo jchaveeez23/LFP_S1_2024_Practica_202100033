@@ -18,5 +18,12 @@ class Gato(Animal):
             return "[%s/%s/%s"%(fecha.day,fecha.month,fecha.year) + " %s:%s"%(fecha.hour,fecha.minute)+"] "+ self.nombre + ", Muy tarde. Ya me mori" 
         
     def Jugar(self,tiempo):
-        pass
-    
+        energia_consumida = int(self.tiempo * 0.1)
+        fecha = datetime.datetime.now()
+
+        if self.estado == True:
+            if self.energia >= energia_consumida:
+                self.energia = self.energia - energia_consumida
+                return "[%s/%s/%s"%(fecha.day,fecha.month,fecha.year) + " %s:%s"%(fecha.hour,fecha.minute)+"] "+self.nombre + ", Ya me comi al raton, ahora mi energia es: " + str(self.energia) + " Joules."
+            else:
+                return "[%s/%s/%s"%(fecha.day,fecha.month,fecha.year) + " %s:%s"%(fecha.hour,fecha.minute)+"] "+self.nombre + ", Ya me mori."
