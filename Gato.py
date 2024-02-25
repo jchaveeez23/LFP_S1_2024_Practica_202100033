@@ -44,12 +44,18 @@ class PetManager:
         try:
             with open(nombre_archivo, 'r') as archivo:
                 for linea in archivo:
-                    partes = linea.strip().split(':')
-                    if len(partes) == 2:
-                        instruccion, parametros = partes
-                        self.ejecutar_instruccion(instruccion, parametros)
-                    else:
-                        print(f"La línea '{linea.strip()}' no tiene el formato esperado y será ignorada.")
+                    linea = linea.strip()
+                    if linea:  
+                        partes = linea.split(':')
+                        instruccion = partes[0]
+                        parametros = partes[1] if len(partes) > 1 else None
+
+                        if instruccion == "Resumen_Global":
+                            self.resumen_global()
+                        elif parametros:
+                            self.ejecutar_instruccion(instruccion, parametros)
+                        else:
+                            print(f"La línea '{linea}' no tiene el formato esperado y será ignorada.")
         except FileNotFoundError:
             print(f"El archivo {nombre_archivo} no fue encontrado.")
         except Exception as e:
@@ -66,15 +72,22 @@ class PetManager:
     def resumen_global(self):
         dot = graphviz.Digraph(comment='Resumen Global')
 
+        # Agregar nodos para cada mascota con su nombre, energía y estado
         for nombre, mascota in self.mascotas.items():
-            estado = 'Vivo' if mascota.vivo else 'Muerto'
-            dot.node(nombre, f"{nombre}\nEnergía: {mascota.energia}\nEstado: {estado}")
+            dot.node(nombre, f"{nombre}")
 
+            # Conectar nodo de mascota con su estado
+            estado = f"Estado_{nombre}"
+            dot.node(estado, f"Estado: {'Vivo' if mascota.vivo else 'Muerto'}")
+            dot.edge(nombre, estado)
+
+        # Conectar nodos por energía
         for nombre, mascota in self.mascotas.items():
-            for otro_nombre in self.mascotas.keys():
-                if nombre != otro_nombre:
-                    dot.edge(nombre, otro_nombre)
+            energia = mascota.energia
+            dot.node(str(energia), f"Energía: {energia}")
+            dot.edge(nombre, str(energia))
 
+        # Guardar el gráfico en un archivo
         dot.render('resumen_global', format='png', cleanup=True)
         print("Gráfico de resumen global generado correctamente.")
 
