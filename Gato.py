@@ -36,7 +36,7 @@ class PetManager:
     def jugar(self, nombre, tiempo):
         mascota = self.mascotas.get(nombre)
         if mascota:
-            mascota.jugar(tiempo) 
+            mascota.jugar(tiempo)
         else:
             print("No se encontró la mascota con ese nombre.")
 
