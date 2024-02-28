@@ -2,18 +2,16 @@ import graphviz
 class Gato:
     def __init__(self,nombre):
         self.nombre = nombre
-        self.energia = 1 
-        self.vivo  = True
+        self.energia = 50
+        self.vivo = True
 
-    def comer(self,peso_raton):
-        self.energia += 12 + peso_raton
+    def aumentar_energia(self, peso):
+        self.energia += 12 + peso
 
-    def jugar(self,tiempo):
-        self.energia -= tiempo * 0.1
-        if self.energia <= 0:
+    def disminuir_energia(self, cantidad):
+        self.energia = max(0, self.energia - cantidad)
+        if self.energia == 0:
             self.vivo = False
-        else:
-            self.vivo = True
     
 #Acciones PetManager
 
@@ -29,14 +27,27 @@ class PetManager:
     def dar_de_comer(self, nombre, peso):
         mascota = self.mascotas.get(nombre)
         if mascota:
-            mascota.comer(peso) 
+            if mascota.vivo:
+                # Lógica para dar de comer
+                mascota.aumentar_energia(peso)
+                print(f"[{datetime.datetime.now()}] {nombre}, Gracias. Ahora mi energía es {mascota.energia}")
+                self.guardar_resumen_en_archivo(nombre, f"Gracias. Ahora mi energía es {mascota.energia}")
+            else:
+                print(f"[{datetime.datetime.now()}] Lo siento, {nombre}. Ya me morí.")
         else:
             print("No se encontró la mascota con ese nombre.")
 
     def jugar(self, nombre, tiempo):
         mascota = self.mascotas.get(nombre)
         if mascota:
-            mascota.jugar(tiempo)
+            if mascota.vivo:
+                # Lógica para jugar
+                energia_perdida = tiempo * 0.1
+                mascota.disminuir_energia(energia_perdida)
+                print(f"[{datetime.datetime.now()}] {nombre}, Gracias por jugar conmigo. Ahora mi energía es {mascota.energia}")
+                self.guardar_resumen_en_archivo(nombre, f"Gracias por jugar conmigo. Ahora mi energía es {mascota.energia}")
+            else:
+                print(f"[{datetime.datetime.now()}] Lo siento, {nombre}. Ya me morí.")
         else:
             print("No se encontró la mascota con ese nombre.")
 
