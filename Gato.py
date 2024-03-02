@@ -10,7 +10,7 @@ class Gato:
 
     def disminuir_energia(self, cantidad):
         self.energia = max(0, self.energia - cantidad)
-        if self.energia == 0:
+        if self.energia <= 0:
             self.vivo = False
     
 #Acciones PetManager
@@ -28,7 +28,6 @@ class PetManager:
         mascota = self.mascotas.get(nombre)
         if mascota:
             if mascota.vivo:
-                # Lógica para dar de comer
                 mascota.aumentar_energia(peso)
                 print(f"[{datetime.datetime.now()}] {nombre}, Gracias. Ahora mi energía es {mascota.energia}")
                 self.guardar_resumen_en_archivo(nombre, f"Gracias. Ahora mi energía es {mascota.energia}")
@@ -41,7 +40,6 @@ class PetManager:
         mascota = self.mascotas.get(nombre)
         if mascota:
             if mascota.vivo:
-                # Lógica para jugar
                 energia_perdida = tiempo * 0.1
                 mascota.disminuir_energia(energia_perdida)
                 print(f"[{datetime.datetime.now()}] {nombre}, Gracias por jugar conmigo. Ahora mi energía es {mascota.energia}")
@@ -83,7 +81,7 @@ class PetManager:
     def resumen_global(self):
         dot = graphviz.Digraph(comment='Resumen Global')
 
-        # Agregar nodos para cada mascota con su nombre, energía y estado
+        # Agregar nodos para cada mascota
         for nombre, mascota in self.mascotas.items():
             dot.node(nombre, f"{nombre}")
 
