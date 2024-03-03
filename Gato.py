@@ -81,6 +81,11 @@ class PetManager:
     def resumen_global(self):
         dot = graphviz.Digraph(comment='Resumen Global')
 
+        with open("resumen_global.petworld_result", 'w') as archivo:
+            for nombre, mascota in self.mascotas.items():
+                estado = "Vivo" if mascota.vivo else "Muerto"
+                archivo.write(f"[{datetime.datetime.now()}] {nombre}, Energía: {mascota.energia}, Tipo: Gato, Estado: {estado}\n")
+
         # Agregar nodos para cada mascota
         for nombre, mascota in self.mascotas.items():
             dot.node(nombre, f"{nombre}")
